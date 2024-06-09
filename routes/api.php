@@ -423,9 +423,5 @@ Route::get('Generated_sops', '\App\Http\Controllers\Api\V1\SopController@getAllG
 // Send Email
 Route::post('send-email', '\App\Http\Controllers\Api\V1\EmailController@sendEmail');
 
-Route::middleware('auth:api')->group(function () {
-    Route::post('logout', 'App\Http\Controllers\Api\V1\AuthController@logout');
-    Route::post('refresh', 'App\Http\Controllers\Api\V1\AuthController@refresh');
-});
 
 
