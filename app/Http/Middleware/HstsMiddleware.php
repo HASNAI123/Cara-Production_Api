@@ -17,6 +17,7 @@ class HstsMiddleware
     {
         $response = $next($request);
         $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');  // Add this line
         return $response;
     }
 }
