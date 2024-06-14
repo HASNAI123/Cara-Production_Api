@@ -371,6 +371,16 @@ Route::delete('/risk_prevention_security/{risk_Prevention_Security}', '\App\Http
 
 
 
+//Incident Report Safety
+
+Route::get('/risk_prevention_Safety', '\App\Http\Controllers\Api\V1\Risk_Prevention_Safety_Controller@index');
+Route::post('/risk_prevention_Safety', [\App\Http\Controllers\Api\V1\Risk_Prevention_Safety_Controller::class, 'store']);
+Route::get('/risk_prevention_Safety/{risk_Prevention_Security}', '\App\Http\Controllers\Api\V1\Risk_Prevention_Safety_Controller@show');
+Route::put('/risk_prevention_Safety/{risk_Prevention_Security}', '\App\Http\Controllers\Api\V1\Risk_Prevention_Safety_Controller@update');
+Route::delete('/risk_prevention_Safety/{risk_Prevention_Security}', '\App\Http\Controllers\Api\V1\Risk_Prevention_Safety_Controller@destroy');
+
+
+
 
 Route::prefix('v1')->group(function () {
     Route::get('folders/type/{type}', '\App\Http\Controllers\Api\V1\folder_libraryController@index');
