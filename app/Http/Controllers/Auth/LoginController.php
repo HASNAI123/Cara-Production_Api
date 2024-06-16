@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\User;
+use Illuminate\Support\Str; // Add this line
 
 
 class LoginController extends Controller
@@ -40,21 +41,16 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('authToken')->plainTextToken;
+            $token = Str::random(60); // Generate a random token
+            $user->api_token = hash('sha256', $token); // Hash the token and store it in the database
+            $user->save();
+
             $name = $user->name;
             $role = $user->role;
             $userId = $user->user_id; // Retrieve the user_id
             $id = $user->id; // Retrieve the id
             $business_unit = $user->business_unit;
             $Last_login = $user->Last_login;
-
-            // Save the token in the database
-            PersonalAccessToken::findToken($token)->forceFill([
-                'name' => 'authToken',
-                'tokenable_id' => $user->id,
-                'tokenable_type' => get_class($user),
-                'abilities' => ['*'],
-            ])->save();
 
             // Update last_login timestamp
             $user->update(['Last_login' => now()]);
@@ -65,7 +61,8 @@ class LoginController extends Controller
                 'user' => $user,
                 'access_token' => $token,
             ], 200);
-        }}
+        }
+    }
 
         public function getLatestLogins()
         {

@@ -295,7 +295,7 @@ Route::put('/QM_QAA_Aeon_big/{id}', 'App\Http\Controllers\Api\V1\QM_Controller@u
 
 
 // QM_QAA_Maxvalue
-
+Route::middleware('auth:api')->group(function () {
 Route::post('/QM_QAA_Maxvalue', 'App\Http\Controllers\Api\V1\QM_Controller@QM_QAA_Maxvalue_store');
 
 Route::get('/QM_QAA_Maxvalue', 'App\Http\Controllers\Api\V1\QM_Controller@QM_QAA_Maxvalue_All');
@@ -305,20 +305,23 @@ Route::get('/QM_QAA_Maxvalue/{id}', 'App\Http\Controllers\Api\V1\QM_Controller@g
 Route::delete('/QM_QAA_Maxvalue/{id}', 'App\Http\Controllers\Api\V1\QM_Controller@delete_QM_QAA_MaxvalueById');
 
 Route::put('/QM_QAA_Maxvalue/{id}', 'App\Http\Controllers\Api\V1\QM_Controller@updateQM_QAA_MaxvalueById');
+});
 
 
 //CAR FORM API
-
+Route::middleware('auth:api')->group(function () {
 Route::post('/CAR', 'App\Http\Controllers\Api\V1\CarController@Store');
 Route::get('/CAR/{id}', 'App\Http\Controllers\Api\V1\CarController@getFormById');
 Route::get('/CAR', 'App\Http\Controllers\Api\V1\CarController@getAllforms');
 Route::put('/CAR/{id}', 'App\Http\Controllers\Api\V1\CarController@updateForm');
 Route::delete('/CAR/{id}', 'App\Http\Controllers\Api\V1\CarController@deleteform');
+});
 
 //SOP API's
 
 // Get latest Sops' API
 
+Route::middleware('auth:api')->group(function () {
 Route::get('latestarchivesops', 'App\Http\Controllers\Api\V1\SopController@getRecentArchiveSops');
 
 Route::get('latestGeneratedsops', 'App\Http\Controllers\Api\V1\SopController@getRecentGeneratedSops');
@@ -339,7 +342,7 @@ Route::get('/Changerequest','App\Http\Controllers\Api\V1\ChangeRequestController
 
 //Generate SOP APi's
 Route::get('sops', 'App\Http\Controllers\GeneratesopController@index');
-
+});
 
 Route::get('/generatesops', [\App\Http\Controllers\Api\V1\GeneratesopController::class, 'index']);
 Route::get('/generatesops/{id}', [\App\Http\Controllers\Api\V1\GeneratesopController::class, 'show']);
@@ -382,25 +385,27 @@ Route::delete('/risk_prevention_Safety/{risk_Prevention_Safety}', '\App\Http\Con
 
 
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->middleware('auth:api')->group(function () {
     Route::get('folders/type/{type}', '\App\Http\Controllers\Api\V1\folder_libraryController@index');
     Route::get('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@show');
     Route::post('createfolder', '\App\Http\Controllers\Api\V1\folder_libraryController@store');
-Route::put('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@update');
+    Route::put('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@update');
     Route::delete('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@deleteFolder');
     Route::delete('folders/mass-delete', '\App\Http\Controllers\Api\V1\folder_libraryController@massDestroy');
     Route::put('folders/{id}/restore', '\App\Http\Controllers\Api\V1\folder_libraryController@restore');
     Route::delete('folders/{id}/perma-del', '\App\Http\Controllers\Api\V1\folder_libraryController@perma_del');
 });
 
-Route::delete('/archivefolders/{id}', '\App\Http\Controllers\Api\V1\folder_archiveController@deleteFolder');
-Route::get('/archivefolders/type/{type}', '\App\Http\Controllers\Api\V1\folder_archiveController@index');
-Route::post('createarchivefolder', '\App\Http\Controllers\Api\V1\folder_archiveController@store');
-Route::get('archivefolders/{id}', '\App\Http\Controllers\Api\V1\folder_archiveController@show');
-Route::get('archivefolders/folder/{id}', '\App\Http\Controllers\Api\V1\folder_archiveController@Getfolder');
-Route::put('archivefolders/{id}', '\App\Http\Controllers\Api\V1\folder_archiveController@update');
-Route::get('api/archivefolders/{id}/check', '\App\Http\Controllers\Api\V1\folder_archiveController@check');
-Route::get('api/archivefolders/{id}/showfolder', '\App\Http\Controllers\Api\V1\folder_archiveController@showfolder');
+Route::middleware('auth:api')->group(function () {
+    Route::delete('/archivefolders/{id}', '\App\Http\Controllers\Api\V1\folder_archiveController@deleteFolder');
+    Route::get('/archivefolders/type/{type}', '\App\Http\Controllers\Api\V1\folder_archiveController@index');
+    Route::post('createarchivefolder', '\App\Http\Controllers\Api\V1\folder_archiveController@store');
+    Route::get('archivefolders/{id}', '\App\Http\Controllers\Api\V1\folder_archiveController@show');
+    Route::get('archivefolders/folder/{id}', '\App\Http\Controllers\Api\V1\folder_archiveController@Getfolder');
+    Route::put('archivefolders/{id}', '\App\Http\Controllers\Api\V1\folder_archiveController@update');
+    Route::get('api/archivefolders/{id}/check', '\App\Http\Controllers\Api\V1\folder_archiveController@check');
+    Route::get('api/archivefolders/{id}/showfolder', '\App\Http\Controllers\Api\V1\folder_archiveController@showfolder');
+});
 
 //Count Number of Users  12
 Route::get('total_users', '\App\Http\Controllers\Api\V1\HomeController@total_users');
@@ -422,20 +427,21 @@ Route::post('feedback', '\App\Http\Controllers\Api\V1\FeedbackController@store')
 
 Route::post('/api/v1/roles/{role_id}/permissions', [\App\Http\Controllers\Api\v1\PermissionController::class, 'addPermissionsToRole']);
 
-//Uploaded Sop
-Route::get('sops', '\App\Http\Controllers\Api\V1\SopController@getSop');
-Route::delete('sops/{id}', 'App\Http\Controllers\Api\V1\SopController@deleteSop');
-Route::get('sops/{id}', '\App\Http\Controllers\Api\V1\Sop_upload@show')->name('sops.show');
+Route::middleware('auth:api')->group(function () {
+    Route::get('sops', '\App\Http\Controllers\Api\V1\SopController@getSop');
+    Route::delete('sops/{id}', 'App\Http\Controllers\Api\V1\SopController@deleteSop');
+    Route::get('sops/{id}', '\App\Http\Controllers\Api\V1\Sop_upload@show')->name('sops.show');
+});
 
 //Generated Sops
-Route::get('Generated_sops', '\App\Http\Controllers\Api\V1\SopController@getAllGeneratedSops');
+Route::middleware('auth:api')->group(function () {
+    Route::get('Generated_sops', '\App\Http\Controllers\Api\V1\SopController@getAllGeneratedSops');
+});
 
 // Send Email
-Route::post('send-email', '\App\Http\Controllers\Api\V1\EmailController@sendEmail');
-
 Route::middleware('auth:api')->group(function () {
-    Route::post('logout', 'App\Http\Controllers\Api\V1\AuthController@logout');
-    Route::post('refresh', 'App\Http\Controllers\Api\V1\AuthController@refresh');
+    Route::post('send-email', '\App\Http\Controllers\Api\V1\EmailController@sendEmail');
 });
+
 
 
