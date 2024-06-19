@@ -385,6 +385,15 @@ Route::put('/risk_prevention_Safety/{risk_Prevention_Safety}', '\App\Http\Contro
 Route::delete('/risk_prevention_Safety/{risk_Prevention_Safety}', '\App\Http\Controllers\Api\V1\Risk_Prevention_Safety_Controller@destroy');
 
 
+//Incident Report Fire
+
+Route::get('/risk_prevention_fire', '\App\Http\Controllers\Api\V1\Risk_Prevention_fire_Controller@index');
+Route::post('/risk_prevention_fire', [\App\Http\Controllers\Api\V1\Risk_Prevention_fire_Controller::class, 'store']);
+Route::get('/risk_prevention_fire/{risk_Prevention_fire}', '\App\Http\Controllers\Api\V1\Risk_Prevention_fire_Controller@show');
+Route::put('/risk_prevention_fire/{risk_Prevention_fire}', '\App\Http\Controllers\Api\V1\Risk_Prevention_fire_Controller@update');
+Route::delete('/risk_prevention_fire/{risk_Prevention_Safety}', '\App\Http\Controllers\Api\V1\Risk_Prevention_fire_Controller@destroy');
+
+
 
 
 Route::prefix('v1')->middleware('auth:api')->group(function () {
