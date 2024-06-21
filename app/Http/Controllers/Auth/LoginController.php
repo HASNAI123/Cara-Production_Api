@@ -73,6 +73,19 @@ class LoginController extends Controller
 
             return response()->json($latestLogins);
         }
+
+        public function getMonthlyLogins()
+{
+    $monthlyLogins = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $count = User::whereYear('last_login', date('Y'))
+            ->whereMonth('last_login', $i)
+            ->count();
+        $monthlyLogins[date('F', mktime(0, 0, 0, $i, 10))] = $count;
+    }
+
+    return response()->json($monthlyLogins);
+}
     /**
      * Log the user out (Invalidate the token).
      *

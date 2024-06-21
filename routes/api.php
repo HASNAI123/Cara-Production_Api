@@ -434,9 +434,13 @@ Route::get('/logs', '\App\Http\Controllers\Api\V1\LogController@index');
 
 //Login APi routes
 
-
+// get latest Logins
 Route::get('onlineUsers', 'App\Http\Controllers\Auth\LoginController@getLatestLogins');
 Route::post('login', 'App\Http\Controllers\Auth\LoginController@login');
+
+// get Monthly Logins
+Route::get('Monthly_logins', 'App\Http\Controllers\Auth\LoginController@getMonthlyLogins');
+
 
 
 Route::post('feedback', '\App\Http\Controllers\Api\V1\FeedbackController@store');
