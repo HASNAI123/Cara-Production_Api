@@ -327,6 +327,12 @@ Route::get('latestarchivesops', 'App\Http\Controllers\Api\V1\SopController@getRe
 Route::get('latestGeneratedsops', 'App\Http\Controllers\Api\V1\SopController@getRecentGeneratedSops');
 
 
+//Total Generated Sops Api
+Route::get('totalGeneratedSops', 'App\Http\Controllers\Api\V1\SopController@getTotalGeneratedSops');
+Route::get('getTotalArchivedSops', 'App\Http\Controllers\Api\V1\SopController@getTotalArchivedSops');
+
+
+
 Route::get('/users', [\App\Http\Controllers\Api\V1\UsersController::class, 'index']);
 
 

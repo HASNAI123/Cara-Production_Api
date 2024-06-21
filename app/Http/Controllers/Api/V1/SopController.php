@@ -16,6 +16,17 @@ class SopController extends Controller
 
         return response()->json($sops);
     }
+    public function getTotalGeneratedSops()
+{
+    $count = Generatesop::count();
+    return response()->json(['total' => $count]);
+}
+
+public function getTotalArchivedSops()
+{
+    $count = Sop::count();
+    return response()->json(['total' => $count]);
+}
 
     public function getAllGeneratedSops()
     {
