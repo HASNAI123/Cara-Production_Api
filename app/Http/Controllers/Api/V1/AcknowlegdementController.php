@@ -17,6 +17,18 @@ class AcknowlegdementController extends Controller
         return  Excel::download(new Archive_AcknowledgmentExport, 'acknowledgments1.xlsx');
     }
 
+    public function getAllAcknowledgments()
+{
+    $acknowledgments = AcknowledgmentArchive::all();
+    return response()->json($acknowledgments);
+}
+
+public function getAllLibraryAcknowledgments()
+{
+    $acknowledgments = AcknowledgmentLibrary::all();
+    return response()->json($acknowledgments);
+}
+
     public function archive_store(Request $request)
     {
         $request->validate([

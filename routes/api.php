@@ -432,6 +432,11 @@ Route::get('total_generatesops', '\App\Http\Controllers\Api\V1\HomeController@to
 
 Route::get('/logs', '\App\Http\Controllers\Api\V1\LogController@index');
 
+// Acknowlegements APi for JSON
+
+Route::get('/archive_acknowledgments', '\App\Http\Controllers\Api\V1\AcknowlegdementController@getAllAcknowledgments');
+Route::get('/library_acknowledgments', '\App\Http\Controllers\Api\V1\AcknowlegdementController@getAllLibraryAcknowledgments');
+
 //Login APi routes
 
 // get latest Logins
