@@ -110,6 +110,13 @@ class folder_libraryController extends Controller
         return response()->json(['data' => $generatesop]);
     }
 
+    public function GetFolder($id)
+{
+    $folder = Folder::find($id);
+
+    return response()->json(['data' => $folder]);
+}
+
 
     public function check($id)
     {
