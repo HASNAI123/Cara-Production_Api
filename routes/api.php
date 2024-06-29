@@ -411,7 +411,7 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
     Route::get('folders/type/{type}', '\App\Http\Controllers\Api\V1\folder_libraryController@index');
     Route::get('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@show');
     Route::post('createfolder', '\App\Http\Controllers\Api\V1\folder_libraryController@store');
-    Route::get('Get_folder/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@GetFolder]');
+    Route::get('Get_folder/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@GetFolder');
 
     Route::put('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@update');
     Route::delete('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@deleteFolder');
