@@ -11,6 +11,7 @@ use League\Flysystem\AwsS3V3\PortableVisibilityConverter;
 
 
 
+
 class GeneratesopController extends Controller
 {
     public function index()
@@ -103,4 +104,23 @@ class GeneratesopController extends Controller
         return response()->json(['message' => 'Generatesop deleted.']);
     }
 
+    public function getDeleted()
+{
+    $deletedGeneratesops = Generatesop::onlyTrashed()->get();
+    return response()->json(['data' => $deletedGeneratesops]);
+}
+
+
+public function restore($id)
+{
+    $generatesop = Generatesop::withTrashed()->find($id);
+
+    if (!$generatesop) {
+        return response()->json(['error' => 'Generatesop not found.'], 404);
+    }
+
+    $generatesop->restore();
+
+    return response()->json(['message' => 'Generatesop restored.']);
+}
 }

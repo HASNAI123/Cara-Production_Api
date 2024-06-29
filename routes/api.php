@@ -357,6 +357,8 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/generatesops/{id}', [\App\Http\Controllers\Api\V1\GeneratesopController::class, 'update']);
     Route::delete('/generatesops/{id}', [App\Http\Controllers\Api\V1\GeneratesopController::class, 'destroy']);
     Route::post('/generatesops/upload', [App\Http\Controllers\Api\v1\GeneratesopController::class, 'upload']);
+    Route::get('/deleted_generatesops', [App\Http\Controllers\Api\v1\GeneratesopController::class, 'getDeleted']);
+    Route::post('/restore_generatesop/{id}', [App\Http\Controllers\Api\v1\GeneratesopController::class, 'restore']);
 });
 
 //Sop upload api
@@ -406,7 +408,7 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
     Route::get('folders/type/{type}', '\App\Http\Controllers\Api\V1\folder_libraryController@index');
     Route::get('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@show');
     Route::post('createfolder', '\App\Http\Controllers\Api\V1\folder_libraryController@store');
-    Route::get('Get_folder/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@GetFolder');
+    Route::get('Get_folder/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@GetFolder]');
 
     Route::put('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@update');
     Route::delete('folders/{id}', '\App\Http\Controllers\Api\V1\folder_libraryController@deleteFolder');
