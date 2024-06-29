@@ -105,10 +105,13 @@ class GeneratesopController extends Controller
     }
 
     public function getDeleted()
-{
-    $deletedGeneratesops = Generatesop::onlyTrashed()->get();
-    return response()->json(['data' => $deletedGeneratesops]);
-}
+    {
+        $deletedGeneratesops = Generatesop::onlyTrashed()
+            ->whereNotNull('deleted_at')
+            ->where('deleted_at', '!=', '')
+            ->get();
+        return response()->json(['data' => $deletedGeneratesops]);
+    }
 
 
 public function restore($id)
