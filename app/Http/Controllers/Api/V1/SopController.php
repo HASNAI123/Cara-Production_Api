@@ -62,4 +62,26 @@ public function getRecentArchiveSops()
 
     return response()->json($recentSops);
 }
+
+public function getDeleted()
+{
+    $deletedsops = Sop::onlyTrashed()
+        ->whereNotNull('deleted_at')
+        ->where('deleted_at', '!=', '')
+        ->get();
+    return response()->json(['data' => $deletedsops]);
+}
+
+public function recoverSop($id)
+{
+    $sop = Sop::withTrashed()->find($id);
+
+    if (!$sop) {
+        return response()->json(['error' => 'Sop not found.'], 404);
+    }
+
+    $sop->restore();
+
+    return response()->json(['message' => 'Sop restored.']);
+}
 }

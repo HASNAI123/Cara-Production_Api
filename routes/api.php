@@ -327,6 +327,9 @@ Route::get('latestarchivesops', 'App\Http\Controllers\Api\V1\SopController@getRe
 Route::get('latestGeneratedsops', 'App\Http\Controllers\Api\V1\SopController@getRecentGeneratedSops');
 
 
+
+
+
 //Total Generated Sops Api
 Route::get('totalGeneratedSops', 'App\Http\Controllers\Api\V1\SopController@getTotalGeneratedSops');
 Route::get('getTotalArchivedSops', 'App\Http\Controllers\Api\V1\SopController@getTotalArchivedSops');
@@ -457,9 +460,13 @@ Route::post('feedback', '\App\Http\Controllers\Api\V1\FeedbackController@store')
 
 Route::post('/api/v1/roles/{role_id}/permissions', [\App\Http\Controllers\Api\v1\PermissionController::class, 'addPermissionsToRole']);
 
+
+//Sop Archive APi's
 Route::middleware('auth:api')->group(function () {
     Route::get('sops', '\App\Http\Controllers\Api\V1\SopController@getSop');
     Route::delete('sops/{id}', 'App\Http\Controllers\Api\V1\SopController@deleteSop');
+    Route::get('deletedsops', 'App\Http\Controllers\Api\V1\SopController@getDeleted');
+    Route::post('recoversops/{id}', 'App\Http\Controllers\Api\V1\SopController@recoverSop');
     Route::get('sops/{id}', '\App\Http\Controllers\Api\V1\Sop_upload@show')->name('sops.show');
 });
 
