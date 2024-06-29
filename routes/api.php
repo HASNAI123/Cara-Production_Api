@@ -360,7 +360,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/generatesops/{id}', [\App\Http\Controllers\Api\V1\GeneratesopController::class, 'update']);
     Route::delete('/generatesops/{id}', [App\Http\Controllers\Api\V1\GeneratesopController::class, 'destroy']);
     Route::post('/generatesops/upload', [App\Http\Controllers\Api\v1\GeneratesopController::class, 'upload']);
-    Route::get('/deleted_generatesops', [App\Http\Controllers\Api\v1\GeneratesopController::class, 'getDeleted']);
+    Route::get('/deleted_generatesops', 'App\Http\Controllers\Api\V1\GeneratesopController@getDeleted');
     Route::post('/restore_generatesop/{id}', [App\Http\Controllers\Api\v1\GeneratesopController::class, 'restore']);
 });
 
