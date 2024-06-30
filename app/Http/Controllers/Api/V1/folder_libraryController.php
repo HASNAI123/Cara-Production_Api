@@ -105,7 +105,7 @@ class folder_libraryController extends Controller
 
     public function show($id)
     {
-        $generatesop = DB::table('generatesops')->where('folder',$id)->get();
+        $generatesop = Generatesop::where('folder', $id)->whereNull('deleted_at')->get();
 
         return response()->json(['data' => $generatesop]);
     }
