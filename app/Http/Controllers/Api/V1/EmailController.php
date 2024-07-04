@@ -16,12 +16,14 @@ class EmailController extends Controller
             'body' => 'required',
         ]);
 
-        Mail::raw($data['body'], function ($message) use ($data) {
+        Mail::send([], [], function ($message) use ($data) {
             $message->from('Admin@caramyaeon.com.my', 'Cara');
             $message->to($data['email']);
             $message->subject($data['subject']);
+            $message->html($data['body']); // Use the html method to set the body
         });
 
         return response()->json(['message' => 'Email sent successfully']);
     }
+
 }
