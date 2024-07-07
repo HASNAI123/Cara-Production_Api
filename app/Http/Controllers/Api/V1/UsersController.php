@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
@@ -94,6 +95,37 @@ public function register(Request $request)
         'token_type' => 'Bearer',
         'user' => $user
     ], 201);
+}
+
+public function uploadCsv(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'file' => 'required|mimes:csv,txt',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 400);
+    }
+
+    $file = $request->file('file');
+    $csvData = array_map('str_getcsv', file($file->getRealPath()));
+
+    try {
+        foreach ($csvData as $row) {
+            User::create([
+                'user_id' => $row[0],
+                'name' => $row[1],
+                'password' => bcrypt('user'), // the default password is 'user'
+                'business_unit' => $row[2],
+                'roles' => ["User"], // set the 'roles' attribute to ["User"]
+                // add more columns as needed
+            ]);
+        }
+    } catch (QueryException $e) {
+        return response()->json(['error' => 'Database error: ' . $e->getMessage()], 500);
+    }
+
+    return response()->json(['message' => 'CSV data imported successfully'], 200);
 }
 public function login(Request $request)
 {

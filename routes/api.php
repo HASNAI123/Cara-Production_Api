@@ -373,6 +373,10 @@ Route::prefix('v1')->group(function () {
 
 
 
+
+// User CSV Upload Api
+Route::post('users/Add_users', '\App\Http\Controllers\Api\V1\UsersController@uploadCsv');
+
 //Get users by role
 Route::get('users/role/{role}', [\App\Http\Controllers\Api\V1\UsersController::class, 'getUsersByRole']);
 
