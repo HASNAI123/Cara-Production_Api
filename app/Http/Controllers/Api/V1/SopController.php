@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\v1;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Sop;
 use App\Models\Generatesop;
 
@@ -21,19 +21,19 @@ class SopController extends Controller
     $count = Generatesop::count();
     return response()->json(['total' => $count]);
 }
-
 public function getTotalArchivedSops()
 {
-    $count = Sop::count();
+    $result = DB::select("SELECT COUNT(*) as count FROM sop WHERE deleted_at IS NULL OR deleted_at = ''");
+    $count = $result[0]->count;
     return response()->json(['total' => $count]);
 }
 
-    public function getAllGeneratedSops()
-    {
-        $sops = Generatesop::all();
-
-        return response()->json($sops);
-    }
+public function getAllGeneratedSops()
+{
+    $result = DB::select("SELECT COUNT(*) as count FROM generatesop WHERE deleted_at IS NULL OR deleted_at = ''");
+    $count = $result[0]->count;
+    return response()->json(['total' => $count]);
+}
     public function deleteSop($id)
     {
         $sop = Sop::find($id);
