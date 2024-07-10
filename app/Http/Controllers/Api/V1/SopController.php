@@ -18,7 +18,8 @@ class SopController extends Controller
     }
     public function getTotalGeneratedSops()
 {
-    $count = Generatesop::count();
+    $result = DB::select("SELECT COUNT(*) as count FROM generatesops WHERE deleted_at IS NULL OR deleted_at = ''");
+    $count = $result[0]->count;
     return response()->json(['total' => $count]);
 }
 public function getTotalArchivedSops()
@@ -30,9 +31,9 @@ public function getTotalArchivedSops()
 
 public function getAllGeneratedSops()
 {
-    $result = DB::select("SELECT COUNT(*) as count FROM generatesops WHERE deleted_at IS NULL OR deleted_at = ''");
-    $count = $result[0]->count;
-    return response()->json(['total' => $count]);
+    $sops = Generatesop::all();
+
+    return response()->json($sops);
 }
     public function deleteSop($id)
     {
