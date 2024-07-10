@@ -30,7 +30,7 @@ public function getTotalArchivedSops()
 
 public function getAllGeneratedSops()
 {
-    $result = DB::select("SELECT COUNT(*) as count FROM generatesop WHERE deleted_at IS NULL OR deleted_at = ''");
+    $result = DB::select("SELECT COUNT(*) as count FROM generatesops WHERE deleted_at IS NULL OR deleted_at = ''");
     $count = $result[0]->count;
     return response()->json(['total' => $count]);
 }
