@@ -92,10 +92,17 @@ class folder_archiveController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
-    {
-        $sop = DB::table('sop')->where('archive_folder', $id)->get();
-        return response()->json(['sop' => $sop]);
-    }
+{
+    $sop = DB::table('sop')
+        ->where('archive_folder', $id)
+        ->where(function ($query) {
+            $query->whereNull('deleted_at')
+                  ->orWhere('deleted_at', '');
+        })
+        ->get();
+
+    return response()->json(['sop' => $sop]);
+}
 
     /**
      * Show the form for editing Folder.
