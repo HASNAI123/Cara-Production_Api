@@ -334,29 +334,11 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
         // Validate the request data
         $validatedData = $request->validate([
             'RemarksData' => 'required|array', // Ensure RemarksData is an array
+            'RemarksData.*.departmentscores' => 'nullable|array', // Allow departmentscores to be an array
         ]);
 
         // Retrieve the array of JSON objects from the request
         $dataArray = $request->input('RemarksData');
-
-        // Validate each entry in RemarksData
-        foreach ($dataArray as $data) {
-            if (!is_array($data)) {
-                return response()->json([
-                    'message' => 'Each entry in RemarksData must be an array'
-                ], 400);
-            }
-
-            // Add specific validation for departmentscores
-            if (isset($data['departmentscores']) && !is_scalar($data['departmentscores'])) {
-                return response()->json([
-                    'message' => 'Non-scalar value found in departmentscores'
-                ], 400);
-            }
-
-            // Add additional validation as needed
-            // ...
-        }
 
         // Update the 'remark_data' field with the new data
         $remark->remark_data = json_encode($dataArray);
@@ -374,6 +356,7 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
         ], 500);
     }
 }
+
 
 
 public function QM_QAA_AEON_All()
