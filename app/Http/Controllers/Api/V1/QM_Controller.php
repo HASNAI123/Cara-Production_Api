@@ -322,26 +322,59 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
 
  public function updateQM_QAA_AEONById(Request $request, $id)
 {
+    try {
+        // Find the remark by ID
+        $remark = QM_QAA_Aeon::find($id);
 
- $remark = QM_QAA_Aeon::find($id);
+        // Check if the remark exists
+        if (!$remark) {
+            return response()->json(['message' => 'Remark not found'], 404);
+        }
 
- if (!$remark) {
-     return response()->json(['message' => 'Remark not found'], 404);
- }
+        // Validate the request data
+        $validatedData = $request->validate([
+            'RemarksData' => 'required|array', // Ensure RemarksData is an array
+        ]);
 
- // Retrieve the array of JSON objects from the request
- $dataArray = $request->json()->get('RemarksData');
+        // Retrieve the array of JSON objects from the request
+        $dataArray = $request->input('RemarksData');
 
- // Update the 'remark_data' field with the new data
- $remark->remark_data = json_encode($dataArray);
+        // Validate each entry in RemarksData
+        foreach ($dataArray as $data) {
+            if (!is_array($data)) {
+                return response()->json([
+                    'message' => 'Each entry in RemarksData must be an array'
+                ], 400);
+            }
 
- // Save the updated data to the database
- $remark->save();
+            // Add specific validation for departmentscores
+            if (isset($data['departmentscores']) && !is_scalar($data['departmentscores'])) {
+                return response()->json([
+                    'message' => 'Non-scalar value found in departmentscores'
+                ], 400);
+            }
 
- return response()->json([
-     'message' => 'Remarks updated successfully',
- ], 200);
+            // Add additional validation as needed
+            // ...
+        }
+
+        // Update the 'remark_data' field with the new data
+        $remark->remark_data = json_encode($dataArray);
+
+        // Save the updated data to the database
+        $remark->save();
+
+        return response()->json([
+            'message' => 'Remarks updated successfully',
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'An error occurred while updating the remarks',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
 }
+
 
 public function QM_QAA_AEON_All()
 {
