@@ -247,19 +247,27 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
     set_time_limit(300);
 
     try {
-        // Validate the request data if needed
+        // Validate the request data
         $validatedData = $request->validate([
-            // Define validation rules here
+            'PreparorID' => 'nullable|string',
+            'StoreCode' => 'required|string',
+            'RemarksData' => 'required|array', // Ensure RemarksData is an array
+            'CreatorID' => 'nullable|string',
+            'CreatorName' => 'nullable|string',
+            'PreparorName' => 'nullable|string',
+            'Condition' => 'nullable|string',
         ]);
 
         // Retrieve the array of JSON objects from the request
-        $dataArray = $request->json()->get('RemarksData');
+        $dataArray = $request->input('RemarksData');
 
-        // Check if RemarksData is valid JSON
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return response()->json([
-                'error' => 'Invalid JSON in RemarksData',
-            ], 400);
+        // Check each element in $dataArray to ensure scalar values
+        foreach ($dataArray as $index => $item) {
+            foreach ($item as $key => $value) {
+                if (!is_scalar($value) && !is_null($value)) {
+                    throw new \Exception("Non-scalar value found in RemarksData[$index][$key].");
+                }
+            }
         }
 
         // Additional parameters from the request body
@@ -295,6 +303,8 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
         ], 500);
     }
 }
+
+
  public function getQM_QAA_AEON_ById($id)
  {
      // Find the RemarkSA model by ID
