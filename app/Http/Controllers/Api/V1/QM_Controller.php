@@ -321,52 +321,27 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
  }
 
  public function updateQM_QAA_AEONById(Request $request, $id)
- {
-     $remark = QM_QAA_Aeon::find($id);
+{
 
-     if (!$remark) {
-         return response()->json(['message' => 'Remark not found'], 404);
-     }
+ $remark = QM_QAA_Aeon::find($id);
 
-     // Validate the request data
-     $validatedData = $request->validate([
-         'PreparorID' => 'nullable|string',
-         'StoreCode' => 'required|string',
-         'RemarksData' => 'required|array', // Ensure RemarksData is an array
-         'RemarksData.*.departmentscores' => 'nullable|array', // Allow departmentscores to be an array
-         'CreatorID' => 'nullable|string',
-         'CreatorName' => 'nullable|string',
-         'PreparorName' => 'nullable|string',
-         'Condition' => 'nullable|string',
-     ]);
-
-     // Retrieve the array of JSON objects from the request
-     $dataArray = $request->input('RemarksData');
-
-     // Additional parameters from the request body
-     $creatorId = $request->input('CreatorID');
-     $creatorName = $request->input('CreatorName');
-     $preparorId = $request->input('PreparorID');
-     $preparorName = $request->input('PreparorName');
-     $storeCode = $request->input('StoreCode');
-     $Condition = $request->input('Condition');
-
-     // Update the Remark model instance with the new data
-     $remark->CreatorID = $creatorId;
-     $remark->CreatorName = $creatorName;
-     $remark->PreparorID = $preparorId;
-     $remark->PreparorName = $preparorName;
-     $remark->StoreCode = $storeCode;
-     $remark->Condition = $Condition;
-     $remark->remark_data = json_encode($dataArray); // Store RemarksData separately
-
-     // Save the updated data to the database
-     $remark->save();
-
-     return response()->json([
-         'message' => 'Remarks updated successfully',
-     ], 200);
+ if (!$remark) {
+     return response()->json(['message' => 'Remark not found'], 404);
  }
+
+ // Retrieve the array of JSON objects from the request
+ $dataArray = $request->json()->get('RemarksData');
+
+ // Update the 'remark_data' field with the new data
+ $remark->remark_data = json_encode($dataArray);
+
+ // Save the updated data to the database
+ $remark->save();
+
+ return response()->json([
+     'message' => 'Remarks updated successfully',
+ ], 200);
+}
 
 public function QM_QAA_AEON_All()
 {
