@@ -242,67 +242,60 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
 
  // QM_QAA_AEON
  public function QM_QAA_AEON_store(Request $request)
-{
-    // Increase the maximum execution time to 300 seconds
-    set_time_limit(300);
+ {
+     // Increase the maximum execution time to 300 seconds
+     set_time_limit(300);
 
-    try {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'PreparorID' => 'nullable|string',
-            'StoreCode' => 'required|string',
-            'RemarksData' => 'required|array', // Ensure RemarksData is an array
-            'CreatorID' => 'nullable|string',
-            'CreatorName' => 'nullable|string',
-            'PreparorName' => 'nullable|string',
-            'Condition' => 'nullable|string',
-        ]);
+     try {
+         // Validate the request data
+         $validatedData = $request->validate([
+             'PreparorID' => 'nullable|string',
+             'StoreCode' => 'required|string',
+             'RemarksData' => 'required|array', // Ensure RemarksData is an array
+             'RemarksData.*.departmentscores' => 'nullable|array', // Allow departmentscores to be an array
+             'CreatorID' => 'nullable|string',
+             'CreatorName' => 'nullable|string',
+             'PreparorName' => 'nullable|string',
+             'Condition' => 'nullable|string',
+         ]);
 
-        // Retrieve the array of JSON objects from the request
-        $dataArray = $request->input('RemarksData');
+         // Retrieve the array of JSON objects from the request
+         $dataArray = $request->input('RemarksData');
 
-        // Check each element in $dataArray to ensure scalar values
-        foreach ($dataArray as $index => $item) {
-            foreach ($item as $key => $value) {
-                if (!is_scalar($value) && !is_null($value)) {
-                    throw new \Exception("Non-scalar value found in RemarksData[$index][$key].");
-                }
-            }
-        }
+         // Additional parameters from the request body
+         $creatorId = $request->input('CreatorID');
+         $creatorName = $request->input('CreatorName');
+         $preparorId = $request->input('PreparorID');
+         $preparorName = $request->input('PreparorName');
+         $storeCode = $request->input('StoreCode');
+         $Condition = $request->input('Condition');
 
-        // Additional parameters from the request body
-        $creatorId = $request->input('CreatorID');
-        $creatorName = $request->input('CreatorName');
-        $preparorId = $request->input('PreparorID');
-        $preparorName = $request->input('PreparorName');
-        $storeCode = $request->input('StoreCode');
-        $Condition = $request->input('Condition');
+         // Create a new Remark model instance with the additional parameters
+         $remark = new QM_QAA_Aeon([
+             'CreatorID' => $creatorId,
+             'CreatorName' => $creatorName,
+             'PreparorID' => $preparorId,
+             'PreparorName' => $preparorName,
+             'StoreCode' => $storeCode,
+             'Condition' => $Condition,
+             'remark_data' => json_encode($dataArray), // Store RemarksData separately
+         ]);
 
-        // Create a new Remark model instance with the additional parameters
-        $remark = new QM_QAA_Aeon([
-            'CreatorID' => $creatorId,
-            'CreatorName' => $creatorName,
-            'PreparorID' => $preparorId,
-            'PreparorName' => $preparorName,
-            'StoreCode' => $storeCode,
-            'Condition' => $Condition,
-            'remark_data' => json_encode($dataArray), // Store RemarksData separately
-        ]);
+         // Save the data to the database
+         $remark->save();
 
-        // Save the data to the database
-        $remark->save();
+         return response()->json([
+             'message' => 'Remarks stored successfully',
+             'data' => $remark,
+         ], 201);
+     } catch (\Exception $e) {
+         return response()->json([
+             'error' => 'An error occurred while storing the remarks',
+             'message' => $e->getMessage(),
+         ], 500);
+     }
+ }
 
-        return response()->json([
-            'message' => 'Remarks stored successfully',
-            'data' => $remark,
-        ], 201);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'An error occurred while storing the remarks',
-            'message' => $e->getMessage(),
-        ], 500);
-    }
-}
 
 
  public function getQM_QAA_AEON_ById($id)
