@@ -270,7 +270,8 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
          $preparorName = $request->input('PreparorName');
          $storeCode = $request->input('StoreCode');
          $Condition = $request->input('Condition');
-         $Expiry_content = $request->input('Expiry_content');
+         $Expiry_content = json_decode($request->input('Expiry_content'), true);
+
 
          // Create a new Remark model instance with the additional parameters
          $remark = new QM_QAA_Aeon([

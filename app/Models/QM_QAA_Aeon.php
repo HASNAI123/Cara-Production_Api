@@ -24,5 +24,6 @@ class QM_QAA_Aeon extends Model
 
     protected $casts = [
         'remark_data' => 'json',
+        'Expiry_content' => 'json'
     ];
 }
