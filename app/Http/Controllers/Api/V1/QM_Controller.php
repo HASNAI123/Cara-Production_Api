@@ -242,64 +242,70 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
 
  // QM_QAA_AEON
  public function QM_QAA_AEON_store(Request $request)
- {
-     // Increase the maximum execution time to 300 seconds
-     set_time_limit(300);
+{
+    // Increase the maximum execution time to 300 seconds
+    set_time_limit(300);
 
-     try {
-         // Decode Expiry_content from JSON string to array
-         $expiryContent = json_decode($request->input('Expiry_content'), true);
+    try {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'PreparorID' => 'nullable|string',
+            'StoreCode' => 'required|string',
+            'RemarksData' => 'required|array', // Ensure RemarksData is an array
+            'RemarksData.*.departmentscores' => 'nullable|array', // Allow departmentscores to be an array
+            'CreatorID' => 'nullable|string',
+            'CreatorName' => 'nullable|string',
+            'PreparorName' => 'nullable|string',
+            'Condition' => 'nullable|string',
+            'Expiry_content' => 'nullable|string', // Validate as string initially
+        ]);
 
-         // Validate the request data, including the decoded Expiry_content
-         $validatedData = $request->validate([
-             'PreparorID' => 'nullable|string',
-             'StoreCode' => 'required|string',
-             'RemarksData' => 'required|array', // Ensure RemarksData is an array
-             'RemarksData.*.departmentscores' => 'nullable|array', // Allow departmentscores to be an array
-             'CreatorID' => 'nullable|string',
-             'CreatorName' => 'nullable|string',
-             'PreparorName' => 'nullable|string',
-             'Condition' => 'nullable|string',
-             'Expiry_content' => 'nullable|array',
-         ]);
+        // Retrieve and decode the array of JSON objects from the request
+        $dataArray = $request->input('RemarksData');
 
-         // Retrieve the array of JSON objects from the request
-         $dataArray = $request->input('RemarksData');
+        // Additional parameters from the request body
+        $creatorId = $request->input('CreatorID');
+        $creatorName = $request->input('CreatorName');
+        $preparorId = $request->input('PreparorID');
+        $preparorName = $request->input('PreparorName');
+        $storeCode = $request->input('StoreCode');
+        $condition = $request->input('Condition');
 
-         // Additional parameters from the request body
-         $creatorId = $request->input('CreatorID');
-         $creatorName = $request->input('CreatorName');
-         $preparorId = $request->input('PreparorID');
-         $preparorName = $request->input('PreparorName');
-         $storeCode = $request->input('StoreCode');
-         $condition = $request->input('Condition');
+        // Decode Expiry_content if it's not null
+        $expiryContent = $request->input('Expiry_content') ? json_decode($request->input('Expiry_content'), true) : null;
 
-         // Create a new Remark model instance with the additional parameters
-         $remark = new QM_QAA_Aeon([
-             'CreatorID' => $creatorId,
-             'CreatorName' => $creatorName,
-             'PreparorID' => $preparorId,
-             'PreparorName' => $preparorName,
-             'StoreCode' => $storeCode,
-             'Condition' => $condition,
-             'remark_data' => json_encode($dataArray), // Store RemarksData separately
-             'Expiry_content' => json_encode($expiryContent) // Encode back to JSON for storage if necessary
-         ]);
+        // Check if Expiry_content is a valid array after decoding
+        if ($expiryContent !== null && !is_array($expiryContent)) {
+            throw new \Exception('Expiry content must be a valid JSON array.');
+        }
 
-         // Save the data to the database
-         $remark->save();
+        // Create a new Remark model instance with the additional parameters
+        $remark = new QM_QAA_Aeon([
+            'CreatorID' => $creatorId,
+            'CreatorName' => $creatorName,
+            'PreparorID' => $preparorId,
+            'PreparorName' => $preparorName,
+            'StoreCode' => $storeCode,
+            'Condition' => $condition,
+            'remark_data' => json_encode($dataArray), // Store RemarksData separately
+            'Expiry_content' => json_encode($expiryContent) // Encode back to JSON for storage if necessary
+        ]);
 
-         return response()->json([
-             'message' => 'Remarks stored successfully',
-             'data' => $remark,
-         ], 201);
-     } catch (\Exception $e) {
-         return response()->json([
-             'error' => 'An error occurred while storing the remarks',
-             'message' => $e->getMessage(),
-         ], 500);
-     }
- }
+        // Save the data to the database
+        $remark->save();
+
+        return response()->json([
+            'message' => 'Remarks stored successfully',
+            'data' => $remark,
+        ], 201);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'An error occurred while storing the remarks',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 
 
 
