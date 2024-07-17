@@ -17,7 +17,8 @@ class QM_QAA_Aeon extends Model
         'PreparorID',
         'PreparorName',
         'StoreCode',
-        'Condition'
+        'Condition',
+        'Expiry_content'
     ];
 
 

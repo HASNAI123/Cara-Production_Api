@@ -257,6 +257,7 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
              'CreatorName' => 'nullable|string',
              'PreparorName' => 'nullable|string',
              'Condition' => 'nullable|string',
+             'Expiry_content' => 'nullable|array',
          ]);
 
          // Retrieve the array of JSON objects from the request
@@ -269,6 +270,7 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
          $preparorName = $request->input('PreparorName');
          $storeCode = $request->input('StoreCode');
          $Condition = $request->input('Condition');
+         $Expiry_content = $request->input('Expiry_content');
 
          // Create a new Remark model instance with the additional parameters
          $remark = new QM_QAA_Aeon([
@@ -279,6 +281,7 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
              'StoreCode' => $storeCode,
              'Condition' => $Condition,
              'remark_data' => json_encode($dataArray), // Store RemarksData separately
+             'Expiry_content' => $Expiry_content
          ]);
 
          // Save the data to the database
