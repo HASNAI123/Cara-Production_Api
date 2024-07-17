@@ -247,7 +247,10 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
      set_time_limit(300);
 
      try {
-         // Validate the request data
+         // Decode Expiry_content from JSON string to array
+         $expiryContent = json_decode($request->input('Expiry_content'), true);
+
+         // Validate the request data, including the decoded Expiry_content
          $validatedData = $request->validate([
              'PreparorID' => 'nullable|string',
              'StoreCode' => 'required|string',
@@ -269,9 +272,7 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
          $preparorId = $request->input('PreparorID');
          $preparorName = $request->input('PreparorName');
          $storeCode = $request->input('StoreCode');
-         $Condition = $request->input('Condition');
-         $Expiry_content = json_decode($request->input('Expiry_content'), true);
-
+         $condition = $request->input('Condition');
 
          // Create a new Remark model instance with the additional parameters
          $remark = new QM_QAA_Aeon([
@@ -280,9 +281,9 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
              'PreparorID' => $preparorId,
              'PreparorName' => $preparorName,
              'StoreCode' => $storeCode,
-             'Condition' => $Condition,
+             'Condition' => $condition,
              'remark_data' => json_encode($dataArray), // Store RemarksData separately
-             'Expiry_content' => $Expiry_content
+             'Expiry_content' => json_encode($expiryContent) // Encode back to JSON for storage if necessary
          ]);
 
          // Save the data to the database
@@ -299,6 +300,7 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
          ], 500);
      }
  }
+
 
 
 
