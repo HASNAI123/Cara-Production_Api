@@ -333,41 +333,52 @@ return response()->json(['message' => 'Remark deleted successfully'], 200);
  }
 
  public function updateQM_QAA_AEONById(Request $request, $id)
-{
-    try {
-        // Find the remark by ID
-        $remark = QM_QAA_Aeon::find($id);
+ {
+     try {
+         // Find the remark by ID
+         $remark = QM_QAA_Aeon::find($id);
 
-        // Check if the remark exists
-        if (!$remark) {
-            return response()->json(['message' => 'Remark not found'], 404);
-        }
+         // Check if the remark exists
+         if (!$remark) {
+             return response()->json(['message' => 'Remark not found'], 404);
+         }
 
-        // Validate the request data
-        $validatedData = $request->validate([
-            'RemarksData' => 'required|array', // Ensure RemarksData is an array
-            'RemarksData.*.departmentscores' => 'nullable|array', // Allow departmentscores to be an array
-        ]);
+         // Validate the request data
+         $validatedData = $request->validate([
+             'RemarksData' => 'required|array', // Ensure RemarksData is an array
+             'RemarksData.*.departmentscores' => 'nullable|array', // Allow departmentscores to be an array
+             'Expiry_content' => 'nullable|string', // Validate Expiry_content as a string
+         ]);
 
-        // Retrieve the array of JSON objects from the request
-        $dataArray = $request->input('RemarksData');
+         // Retrieve the array of JSON objects from the request
+         $dataArray = $request->input('RemarksData');
 
-        // Update the 'remark_data' field with the new data
-        $remark->remark_data = json_encode($dataArray);
+         // Decode Expiry_content if it's not null
+         $expiryContent = $request->input('Expiry_content') ? json_decode($request->input('Expiry_content'), true) : null;
 
-        // Save the updated data to the database
-        $remark->save();
+         // Check if Expiry_content is a valid array after decoding
+         if ($expiryContent !== null && !is_array($expiryContent)) {
+             throw new \Exception('Expiry content must be a valid JSON array.');
+         }
 
-        return response()->json([
-            'message' => 'Remarks updated successfully',
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'An error occurred while updating the remarks',
-            'message' => $e->getMessage(),
-        ], 500);
-    }
-}
+         // Update the 'remark_data' and 'expiry_content' fields with the new data
+         $remark->remark_data = json_encode($dataArray);
+         $remark->expiry_content = json_encode($expiryContent); // Encode back to JSON for storage if necessary
+
+         // Save the updated data to the database
+         $remark->save();
+
+         return response()->json([
+             'message' => 'Remarks updated successfully',
+         ], 200);
+     } catch (\Exception $e) {
+         return response()->json([
+             'error' => 'An error occurred while updating the remarks',
+             'message' => $e->getMessage(),
+         ], 500);
+     }
+ }
+
 
 
 
