@@ -31,7 +31,8 @@ class Generatesop extends Model
             'Description'=>'array',
             'Appendix'=>'array',
             'action' => 'array',
-            'Sop_file' => 'array'
+            'Sop_file' => 'array',
+            'Version_history' => 'array'
 
         ];
 
@@ -65,6 +66,7 @@ class Generatesop extends Model
             'language',
 
             // SOP details content
+            'Version_history',
             'Purpose',
             'Scope',
             'Defination',
