@@ -17,11 +17,13 @@ class QM_QAA_Aeon_big extends Model
         'PreparorID',
         'PreparorName',
         'StoreCode',
-        'Condition'
+        'Condition',
+        'Expiry_content'
     ];
 
 
     protected $casts = [
         'remark_data' => 'json',
+        'Expiry_content' => 'json'
     ];
 }
