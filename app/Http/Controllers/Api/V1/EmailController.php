@@ -14,13 +14,20 @@ class EmailController extends Controller
             'email' => 'required|email',
             'subject' => 'required',
             'body' => 'required',
+            'image_base64' => 'nullable|string', // Optional base64 image data
         ]);
 
-        Mail::send([], [], function ($message) use ($data) {
+        $htmlBody = $data['body'];
+
+        if (!empty($data['image_base64'])) {
+            $htmlBody .= '<br><br><img src="' . $data['image_base64'] . '" alt="Image" />';
+        }
+
+        Mail::send([], [], function ($message) use ($data, $htmlBody) {
             $message->from('Admin@caramyaeon.com.my', 'Cara');
             $message->to($data['email']);
             $message->subject($data['subject']);
-            $message->html($data['body']); // Use the html method to set the body
+            $message->html($htmlBody); // Use the html method to set the body
         });
 
         return response()->json(['message' => 'Email sent successfully']);
