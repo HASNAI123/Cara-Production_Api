@@ -14,7 +14,7 @@ class EmailController extends Controller
             'email' => 'required|email',
             'subject' => 'required',
             'body' => 'required',
-            'image_base64' => 'nullable|string', // Optional base64 image data to
+            'image_base64' => 'nullable|string', // Optional base64 image data to1
         ]);
 
         $htmlBody = $data['body'];
