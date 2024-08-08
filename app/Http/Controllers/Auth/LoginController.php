@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\User;
-use App\Models\LoginHistory;
 use Illuminate\Support\Str; // Add this line
 
 
@@ -55,13 +54,6 @@ class LoginController extends Controller
 
             // Update last_login timestamp
             $user->update(['Last_login' => now()]);
-
-             // Record login history
-             LoginHistory::create([
-                'user_id' => $user->id,
-                'user_name' => $user->name,
-                'logged_in_at' => now(),
-            ]);
 
             $user->refresh();
 

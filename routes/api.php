@@ -485,7 +485,4 @@ Route::middleware('auth:api')->group(function () {
 });
 
 
-Route::middleware('auth:api')->group(function () {
-Route::get('/login-histories', 'App\Http\Controllers\Auth\LoginHistoryController@index');
-    Route::get('/login-histories/{id}', 'App\Http\Controllers\Auth\LoginHistoryController@show');
-});
+
