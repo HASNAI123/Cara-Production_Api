@@ -14,8 +14,5 @@ class LoginHistory extends Model
     public $timestamps = true;
 
     // You can also define relationships, if necessary
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    
 }
