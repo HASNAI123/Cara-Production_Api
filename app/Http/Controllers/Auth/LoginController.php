@@ -58,7 +58,7 @@ class LoginController extends Controller
 
              // Record login history
              LoginHistory::create([
-                'user_id' => $user->id,
+                'user_id' => $user->user_id,
                 'user_name' => $user->name,
                 'logged_in_at' => now(),
             ]);
